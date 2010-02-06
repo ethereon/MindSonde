@@ -12,6 +12,7 @@
  */
 
 #include <string>
+#include <cstring>
 #include "ParameterSet.h"
 #include "EnumParameter.h"
 #include "IntegerParameter.h"

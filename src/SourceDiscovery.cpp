@@ -13,7 +13,7 @@
 
 #include "SourceDiscovery.h"
 #include <stddef.h>
-#include <SinusoidalSource.h>
+#include "SinusoidalSource.h"
 
 using namespace std;
 

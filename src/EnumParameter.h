@@ -16,7 +16,7 @@
 
 
 #include "Parameter.h"
-#include <Assert.h>
+#include <assert.h>
 
 class EnumParameter : public Parameter {
 

@@ -5,3 +5,5 @@ SOURCES = src/*.cpp
 HEADERS = src/*.h
 INCLUDEPATH +=../BioAmp/include
 MOC_DIR = build/mocFiles
+LIBS += -lqwt
+

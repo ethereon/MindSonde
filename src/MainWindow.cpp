@@ -16,6 +16,8 @@
 
 MainWindow* MainWindow::instance = NULL;
 
+//-----------------------------------------------------------------------------
+
 MainWindow* MainWindow::Instance()
 {
 	
@@ -25,25 +27,35 @@ MainWindow* MainWindow::Instance()
 	return instance;
 }
 
+//-----------------------------------------------------------------------------
+
 MainWindow::MainWindow() {
 
+
+
 	viewStack = new QStackedWidget(this);
+
 
 	srcSelector = new SourceSelector;
 	viewStack->addWidget(srcSelector);
 
 
 	setCentralWidget(viewStack);
-    createToolbars();
+//    createToolbars();
 
 }
+
+//-----------------------------------------------------------------------------
 
 void MainWindow::pushView(QWidget* argView) {
 	
+	argView->setParent(this);
 	viewStack->addWidget(argView);
-	viewStack->setCurrentIndex(viewStack->count()-1);
+	viewStack->setCurrentWidget(argView);
 	
 }
+
+//-----------------------------------------------------------------------------
 
 QWidget* MainWindow::popView() {
 	
@@ -55,15 +67,18 @@ QWidget* MainWindow::popView() {
 	
 }
 
+//-----------------------------------------------------------------------------
+
 MainWindow::~MainWindow() {
     
 }
 
-
-
+//-----------------------------------------------------------------------------
 
 void MainWindow::createToolbars() {
 
     tbAmpControl = addToolBar(tr("Amp Control"));
 
 }
+
+//-----------------------------------------------------------------------------

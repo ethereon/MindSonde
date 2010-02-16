@@ -15,10 +15,8 @@
 #define	_MAINWINDOW_H
 
 
-#include <QMainWindow>
-#include <QPainter>
-#include <QAction>
-#include <QStackedWidget>
+#include <QtGui>
+
 #include "SourceSelector.h"
 
 class MainWindow : public QMainWindow {

@@ -13,12 +13,7 @@
 
 
 #include "SourceSelector.h"
-#include <QVBoxLayout>
-#include <QHBoxLayout>
-#include <QGroupBox>
-#include <QGridLayout>
-#include <QLabel>
-#include <QPushButton>
+#include <QtGui>
 #include "SourceDiscovery.h"
 #include <vector>
 #include "SignalSource.h"
@@ -39,7 +34,7 @@ void SourceSelector::showConfigurationDialog()
 {
 
 
-	SourceConfig* cfgDialog = new SourceConfig(signalSources[0], this);
+	SourceConfig* cfgDialog = new SourceConfig(signalSources[sourceList->currentRow()], this);
 	MainWindow::Instance()->pushView(cfgDialog);
 	
 	
@@ -57,8 +52,11 @@ void SourceSelector::populateSources() {
 		SignalSource* src = signalSources[i];
 		new QListWidgetItem(src->getName(), sourceList);
 		
+		
 	}
-
+	
+	sourceList->setSelectionMode(QAbstractItemView::SingleSelection);
+	sourceList->setCurrentRow(0);	
 }
 
 void SourceSelector::setup() {

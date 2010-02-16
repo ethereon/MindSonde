@@ -15,12 +15,10 @@
 #ifndef __SOURCE_CONFIG_H__
 #define __SOURCE_CONFIG_H__
 
-#include <QWidget>
+#include <QtGui>
 #include "SignalSource.h"
 #include <vector>
-#include <QFormLayout>
-#include <QGroupBox>
-#include <QVBoxLayout>
+
 
 class SourceConfig : public QWidget {
 

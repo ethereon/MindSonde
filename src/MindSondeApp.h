@@ -1,7 +1,7 @@
 /*
  ================================================================
  
- SourceSelector
+ MindSondeApp
  MindSonde / The Myelin Project
  
  Copyright (C) 2010 Saumitro Dasgupta.
@@ -11,35 +11,26 @@
  ================================================================
  */
 
-#ifndef __SOURCE_SELECTOR_H__
-#define __SOURCE_SELECTOR_H__
-
-#include <QtGui>
+#include "MainWindow.h"
+#include "AcquisitionThread.h"
 #include "SignalSource.h"
-#include <vector>
+#include <QtGui>
 
-class SourceSelector : public QWidget {
+class MindSondeApp {
 
-	Q_OBJECT
-
-private slots:
-	
-	void showConfigurationDialog();
-	
 private:
 	
+	MindSondeApp();
 	
-	QListWidget* sourceList;
-	std::vector<SignalSource*> signalSources;
+	MainWindow* mainWindow;
 	
-	void setup();
-	void populateSources();
-	
+	//Singleton pointer
+	static MindSondeApp* instance;
+		
 public:
 	
-	SourceSelector(QWidget* parent = 0);
-
-
+	static MindSondeApp* Instance();
+	
+	int execute(int argc, char** argv);
+	
 };
-
-#endif

@@ -1,10 +1,8 @@
 /*
  ================================================================
  
- MindSonde
- The Myelin Project
- 
- A robust app for BCI prototyping and EEG acquisition
+ RealtimePlot
+ MindSonde / The Myelin Project
  
  Copyright (C) 2010 Saumitro Dasgupta.
  This code is made available under the MIT License.
@@ -13,13 +11,24 @@
  ================================================================
  */
 
+#ifndef __REALTIME_PLOT_H__
+#define __REALTIME_PLOT_H__
 
-#include "MindSondeApp.h"
+#include <qwt/qwt_plot.h>
 
+class RealtimePlot : public QwtPlot {
 
-int main(int argc, char** argv) {
+	Q_OBJECT
+	
+public:
+	
+	RealtimePlot(QWidget* parent = NULL);
+	
+private:
+	
+	int timerInterval;
 
+	
+};
 
-	return MindSondeApp::Instance()->execute(argc, argv);
-
-}
+#endif

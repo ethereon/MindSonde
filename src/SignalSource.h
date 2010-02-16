@@ -14,9 +14,9 @@
 #ifndef __SIGNAL_SOURCE_H__
 #define __SIGNAL_SOURCE_H__
 
-#include <QWidget>
+#include <QtGui>
 #include "ParameterSet.h"
-
+#include "ChannelData.h"
 
 class SignalSource {
 	
@@ -28,11 +28,23 @@ public:
 	
 	virtual ParameterSet* getParameters()=0;
 	
+	//TODO: Should these be here? Perhaps move these two functions to ParameterSet.
 	virtual void saveSettingsToFile(const char* filename)=0;
 	virtual void readSettingsFromFile(const char* filename)=0;
-	virtual bool configure()=0;
 	
+	//Characteristics
 	virtual const char* getName()=0;
+	virtual unsigned getSamplingRate()=0;
+	virtual unsigned getChannelCount()=0;
+	virtual unsigned getBlockSize()=0;
+
+	//Actions
+	virtual bool configure()=0;
+	virtual void start()=0;
+	virtual void stop()=0;
+	virtual ChannelData* getData()=0;
+
+	
 	
 };
 

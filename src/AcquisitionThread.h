@@ -1,7 +1,7 @@
 /*
  ================================================================
  
- SourceSelector
+ AcquisitionThread
  MindSonde / The Myelin Project
  
  Copyright (C) 2010 Saumitro Dasgupta.
@@ -11,35 +11,43 @@
  ================================================================
  */
 
-#ifndef __SOURCE_SELECTOR_H__
-#define __SOURCE_SELECTOR_H__
+#ifndef __ACQUISITION_THREAD_H__
+#define __ACQUISITION_THREAD_H__
 
 #include <QtGui>
 #include "SignalSource.h"
 #include <vector>
 
-class SourceSelector : public QWidget {
-
-	Q_OBJECT
-
-private slots:
+class AcquisitionThread : public QThread {
 	
-	void showConfigurationDialog();
+	Q_OBJECT
 	
 private:
 	
+	volatile bool isStopped;
 	
-	QListWidget* sourceList;
-	std::vector<SignalSource*> signalSources;
+	SignalSource* source;
+	ChannelData* data;
+
+	QMutex mutex;
+	QWaitCondition w;
 	
-	void setup();
-	void populateSources();
+
+signals:
+	
+	void newDataAvailable(ChannelData* data);
 	
 public:
 	
-	SourceSelector(QWidget* parent = 0);
+	
+	AcquisitionThread();
 
-
+	void setSignalSource(SignalSource* argSrc);
+	void run();
+	void stop();
+	
+	void releaseMutex();
+		
 };
 
 #endif

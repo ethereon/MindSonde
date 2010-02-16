@@ -13,17 +13,18 @@
 
 
 #include "SourceConfig.h"
-#include <QLineEdit>
-#include <QCheckBox>
-#include <QHBoxLayout>
-#include <QPushButton>
-#include <QIntValidator>
+#include <QtGui>
+
+#include <string>
+#include <sstream>
+
 #include "BooleanParameter.h"
 #include "EnumParameter.h"
 #include "IntegerParameter.h"
-#include <string>
-#include <sstream>
 #include "MainWindow.h"
+#include "SignalView.h"
+#include "MindSondeApp.h"
+#include "AcquisitionCentral.h"
 
 using namespace std;
 
@@ -117,7 +118,25 @@ void SourceConfig::syncParameters() {
 void SourceConfig::onStart() {
 	
 	syncParameters();
-
+	source->configure();
+	source->start();
+	
+	
+	SignalView*	signalView = new SignalView();
+	SourceProxy* proxy = new SourceProxy();
+	proxy->setSignalSource(this->source);
+	signalView->setSourceProxy(proxy);
+	
+	AcquisitionCentral::Instance()->setSignalSource(this->source);
+	AcquisitionCentral::Instance()->subscribe();
+	AcquisitionCentral::Instance()->start();
+	
+#if 0
+	MindSondeApp::Instance()->setActiveSignalSource(source);
+	MindSondeApp::Instance()->startAcquisitionThread();
+	MindSondeApp::Instance()->subscribe(signalView);
+#endif
+	MainWindow::Instance()->pushView(signalView);
 	
 }
 
@@ -160,7 +179,7 @@ void SourceConfig::constructUI() {
 		else if(BooleanParameter* bp = dynamic_cast<BooleanParameter*>(p)) {
 			
 			QCheckBox* checkbox = new QCheckBox(paramGroup);
-			
+			checkbox->setChecked(bp->getValue());
 			addParamField(checkbox, bp);
 			
 		}

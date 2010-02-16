@@ -17,6 +17,7 @@
 #define __SINUSOIDAL_SOURCE_H__
 
 #include "SignalSource.h"
+#include "InterleavedChannelData.h"
 
 
 class SinusoidalSource : public SignalSource {
@@ -26,7 +27,23 @@ private:
 	void setupParameters();
 
 	ParameterSet params;
+	
+	InterleavedChannelData channelData;
+	
+	//Source characteristics
+	int frequency;
+	int samplingRate;
+	int channelCount;
+	int blockSize;
+	bool isNoisy;
+	
+	float increment;
+	
+	double time;
+	
+	float* samples;
 
+	
 public:
 	
 	SinusoidalSource();
@@ -36,10 +53,16 @@ public:
 	
 	void saveSettingsToFile(const char* filename);
 	void readSettingsFromFile(const char* filename);
-	
 	bool configure();
-	
 	const char* getName();
+	
+	unsigned getSamplingRate();
+	unsigned getBlockSize();
+	unsigned getChannelCount();
+
+	void start();
+	void stop();
+	ChannelData* getData();
 	
 };
 

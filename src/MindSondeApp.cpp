@@ -38,12 +38,18 @@ int MindSondeApp::execute(int argc, char** argv) {
 	
 	QApplication app(argc, argv);
 	
+	//Acquire the shared instance to the Main Window
 	mainWindow = MainWindow::Instance();	
+
+	//Set the Source Selector view as the primary one
+	this->sourceSelector = new SourceSelector(mainWindow);
+	mainWindow->pushView(sourceSelector);
 	
 	mainWindow->resize(800,600);
 	mainWindow->show();
 	mainWindow->setWindowTitle(QApplication::translate("appName","MindSonde"));
 
+	
 	return app.exec();
 	
 }

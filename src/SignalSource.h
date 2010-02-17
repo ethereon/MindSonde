@@ -27,10 +27,7 @@ public:
 	virtual ~SignalSource() {}
 	
 	virtual ParameterSet* getParameters()=0;
-	
-	//TODO: Should these be here? Perhaps move these two functions to ParameterSet.
-	virtual void saveSettingsToFile(const char* filename)=0;
-	virtual void readSettingsFromFile(const char* filename)=0;
+
 	
 	//Characteristics
 	virtual const char* getName()=0;
@@ -39,6 +36,8 @@ public:
 	virtual unsigned getBlockSize()=0;
 
 	//Actions
+	virtual void connect()=0;
+	virtual void disconnect()=0;
 	virtual bool configure()=0;
 	virtual void start()=0;
 	virtual void stop()=0;

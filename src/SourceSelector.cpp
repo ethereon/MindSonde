@@ -22,10 +22,10 @@
 
 using namespace std;
 
-SourceSelector::SourceSelector(QWidget *parent) : QWidget(parent)
+SourceSelector::SourceSelector(QWidget *parent) : View(parent)
 {
 	
-	setup();
+	constructUI();
 	populateSources();
 
 }
@@ -33,10 +33,12 @@ SourceSelector::SourceSelector(QWidget *parent) : QWidget(parent)
 void SourceSelector::showConfigurationDialog()
 {
 
-
-	SourceConfig* cfgDialog = new SourceConfig(signalSources[sourceList->currentRow()], this);
-	MainWindow::Instance()->pushView(cfgDialog);
+	SignalSource* selectedSource = signalSources[sourceList->currentRow()];
 	
+	selectedSource->connect();
+	
+	SourceConfig* cfgDialog = new SourceConfig(selectedSource, this);
+	MainWindow::Instance()->pushView(cfgDialog);
 	
 }
 
@@ -59,7 +61,7 @@ void SourceSelector::populateSources() {
 	sourceList->setCurrentRow(0);	
 }
 
-void SourceSelector::setup() {
+void SourceSelector::constructUI() {
 
 	//Create paramLayout
 	QVBoxLayout *paramLayout = new QVBoxLayout;
@@ -96,5 +98,13 @@ void SourceSelector::setup() {
 	
 	QObject::connect(btnConnect, SIGNAL(clicked()), this, SLOT(showConfigurationDialog()));
 	
+
+}
+
+void SourceSelector::setup() {
+
+}
+
+void SourceSelector::cleanup() {
 
 }

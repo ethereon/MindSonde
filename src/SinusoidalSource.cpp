@@ -94,14 +94,6 @@ ParameterSet* SinusoidalSource::getParameters() {
 	
 }
 
-void SinusoidalSource::saveSettingsToFile(const char* filename) {
-	
-}
-
-void SinusoidalSource::readSettingsFromFile(const char* filename) {
-	
-}
-
 
 bool SinusoidalSource::configure() {
 	

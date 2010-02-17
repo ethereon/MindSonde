@@ -14,6 +14,7 @@
 #include "SourceDiscovery.h"
 #include <stddef.h>
 #include "SinusoidalSource.h"
+#include "UsbAmpSource.h"
 
 using namespace std;
 
@@ -34,5 +35,6 @@ void SourceDiscovery::getSources(vector<SignalSource*>* vecSources)
 {
 
 	vecSources->push_back(new SinusoidalSource());
+	vecSources->push_back(new UsbAmpSource());
 
 }

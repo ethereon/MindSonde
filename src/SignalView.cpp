@@ -16,8 +16,9 @@
 #include "AcquisitionCentral.h"
 #include "assert.h"
 #include "PlotPalette.h"
+#include "MainWindow.h"
 
-SignalView::SignalView(QWidget* parent) : QWidget(parent) {
+SignalView::SignalView(QWidget* parent) : View(parent) {
 	
 	plots = NULL;
 	xValues = NULL;
@@ -177,4 +178,32 @@ void SignalView::processNewData(ChannelData* channelData) {
 	
 	AcquisitionCentral::Instance()->releaseData();
 	
+}
+
+void SignalView::setupDockWindows() {
+	
+	QDockWidget* dock = new QDockWidget("Configure",this);
+	dock->setAllowedAreas(Qt::LeftDockWidgetArea |
+						  Qt::RightDockWidgetArea |
+						  Qt::TopDockWidgetArea |
+						  Qt::BottomDockWidgetArea);
+	
+	MainWindow::Instance()->addDockWidget(Qt::LeftDockWidgetArea, dock);
+	
+	QToolBox* toolbox = new QToolBox(this);
+	dock->setWidget(toolbox);
+	
+}
+
+void SignalView::setup() {
+	
+	MainWindow::Instance()->enterAcquisitionMode();
+	//setupDockWindows();
+
+}
+
+void SignalView::cleanup() {
+	
+	MainWindow::Instance()->exitAcquisitionMode();
+
 }

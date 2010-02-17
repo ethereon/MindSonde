@@ -15,12 +15,12 @@
 #ifndef __SOURCE_CONFIG_H__
 #define __SOURCE_CONFIG_H__
 
-#include <QtGui>
+#include "View.h"
 #include "SignalSource.h"
 #include <vector>
 
 
-class SourceConfig : public QWidget {
+class SourceConfig : public View {
 
 	Q_OBJECT
 	
@@ -40,13 +40,16 @@ private:
 	std::vector<QWidget*> fields;
 	
 	void constructUI();
-	void setup();
+	void generateParamInterface();
 	void syncParameters();
 	void addParamField(QWidget* f, Parameter* p);
 	
 public:
 
 	SourceConfig(SignalSource* src, QWidget* parent = 0);
+	
+	void setup();
+	void cleanup();
 
 
 	

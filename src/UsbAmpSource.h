@@ -1,10 +1,8 @@
 /*
  ================================================================
  
- SinusoidalSource
+ g.UsbAmp Signal Source
  MindSonde / The Myelin Project
- 
- A simulated sinusoidal signal source
  
  Copyright (C) 2010 Saumitro Dasgupta.
  This code is made available under the MIT License.
@@ -13,54 +11,46 @@
  ================================================================
  */
 
-#ifndef __SINUSOIDAL_SOURCE_H__
-#define __SINUSOIDAL_SOURCE_H__
+#ifndef __USB_AMP_SOURCE_H__
+#define __USB_AMP_SOURCE_H__
 
 #include "SignalSource.h"
+#include "AmpLink.h"
 #include "InterleavedChannelData.h"
 
-
-class SinusoidalSource : public SignalSource {
+class UsbAmpSource :  public SignalSource{
 	
 private:
-
-	void setupParameters();
-
+	
+	void setup();
+	
 	ParameterSet params;
 	
-	InterleavedChannelData channelData;
+	int getIntegerParam(const char* name);
 	
-	//Source characteristics
-	int frequency;
-	int samplingRate;
-	int channelCount;
-	int blockSize;
-	bool isNoisy;
-	
-	float increment;
-	
-	double time;
-	
-	float* samples;
+	AmpLink amp;
 
-	
+	unsigned bufferLen;
+	char* buffer;
+	InterleavedChannelData channelData;
+
 public:
 	
-	SinusoidalSource();
-	~SinusoidalSource();	
+	UsbAmpSource();
+	~UsbAmpSource();
 	
 	ParameterSet* getParameters();
 	
-
-	bool configure();
+	//Characteristics
 	const char* getName();
-	
 	unsigned getSamplingRate();
-	unsigned getBlockSize();
 	unsigned getChannelCount();
-
-	void connect() {}
-	void disconnect() {}
+	unsigned getBlockSize();
+	
+	//Actions
+	void connect();
+	void disconnect();
+	bool configure();
 	void start();
 	void stop();
 	ChannelData* getData();

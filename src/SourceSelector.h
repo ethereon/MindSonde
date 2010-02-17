@@ -14,11 +14,11 @@
 #ifndef __SOURCE_SELECTOR_H__
 #define __SOURCE_SELECTOR_H__
 
-#include <QtGui>
+#include "View.h"
 #include "SignalSource.h"
 #include <vector>
 
-class SourceSelector : public QWidget {
+class SourceSelector : public View {
 
 	Q_OBJECT
 
@@ -32,12 +32,15 @@ private:
 	QListWidget* sourceList;
 	std::vector<SignalSource*> signalSources;
 	
-	void setup();
+	void constructUI();
 	void populateSources();
 	
 public:
 	
 	SourceSelector(QWidget* parent = 0);
+	
+	void setup();
+	void cleanup();
 
 
 };

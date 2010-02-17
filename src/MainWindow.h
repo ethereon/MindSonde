@@ -18,6 +18,8 @@
 #include <QtGui>
 
 #include "SourceSelector.h"
+#include "View.h"
+#include <vector>
 
 class MainWindow : public QMainWindow {
 
@@ -33,13 +35,10 @@ private:
 
     //Actions
     QAction* axnToggleAmpState;
-
-	SourceSelector* srcSelector;
-	
-	QStackedWidget* viewStack;
 	
     void createToolbars();
 
+	std::vector<View*> viewStack;
 
 	MainWindow();
 	
@@ -47,12 +46,14 @@ public:
 
 	static MainWindow* Instance();
 	
-	void pushView(QWidget* argView);
-	QWidget* popView();
-
     ~MainWindow();
-
-
+	
+	void enterAcquisitionMode();
+	void exitAcquisitionMode();
+	
+	void pushView(View* view);
+	View* popView();
+	
 
 };
 

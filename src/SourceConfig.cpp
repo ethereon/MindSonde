@@ -13,7 +13,6 @@
 
 
 #include "SourceConfig.h"
-#include <QtGui>
 
 #include <string>
 #include <sstream>
@@ -36,18 +35,18 @@ string integerToString(const long& v) {
 	
 }
 
-SourceConfig::SourceConfig(SignalSource* src, QWidget* parent) : QWidget(parent)
+SourceConfig::SourceConfig(SignalSource* src, QWidget* parent) : View(parent)
 {
 	
 	this->source = src;
 	
+	generateParamInterface();
 	constructUI();
-	setup();
 
 
 }
 
-void SourceConfig::setup() {
+void SourceConfig::constructUI() {
 	
 
 	layout = new QVBoxLayout(this);
@@ -117,31 +116,37 @@ void SourceConfig::syncParameters() {
 
 void SourceConfig::onStart() {
 	
+	//Synchronize tha ParameterSet with the user entered values
 	syncParameters();
+	
+	//Tell the source to configure itself with the entered parameters
 	source->configure();
+	
+	//Tell the source to start acquisition
 	source->start();
 	
-	
-	SignalView*	signalView = new SignalView();
+	//Create a Source Proxy
+	//TODO: Refactor this. Make sure it gets freed later.
 	SourceProxy* proxy = new SourceProxy();
 	proxy->setSignalSource(this->source);
+	
+	//Create a Signal View
+	SignalView*	signalView = new SignalView();
 	signalView->setSourceProxy(proxy);
 	
+	//Setup the Acquisition Center and tell it to start broadcasting data
 	AcquisitionCentral::Instance()->setSignalSource(this->source);
 	AcquisitionCentral::Instance()->subscribe();
 	AcquisitionCentral::Instance()->start();
-	
-#if 0
-	MindSondeApp::Instance()->setActiveSignalSource(source);
-	MindSondeApp::Instance()->startAcquisitionThread();
-	MindSondeApp::Instance()->subscribe(signalView);
-#endif
+
 	MainWindow::Instance()->pushView(signalView);
+
 	
 }
 
 void SourceConfig::onCancel() {
 	
+	source->disconnect();
 	MainWindow::Instance()->popView();
 	delete this;
 	
@@ -154,7 +159,7 @@ void SourceConfig::addParamField(QWidget* f, Parameter* p) {
 	
 }
 
-void SourceConfig::constructUI() {
+void SourceConfig::generateParamInterface() {
 
 	paramGroup = new QGroupBox(this);
 	
@@ -186,10 +191,18 @@ void SourceConfig::constructUI() {
 		else if(EnumParameter* ep = dynamic_cast<EnumParameter*>(p)) {
 			
 			
-			
 		}
 		
-	}
+	}	
+
+}
+
+void SourceConfig::setup() {
 	
+	
+
+}
+
+void SourceConfig::cleanup() {
 
 }

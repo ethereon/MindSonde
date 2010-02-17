@@ -26,6 +26,8 @@ private:
 	
 	//Singleton pointer
 	static MindSondeApp* instance;
+	
+	SourceSelector* sourceSelector;
 		
 public:
 	

@@ -14,7 +14,7 @@
 #ifndef __SIGNAL_VIEW_H__
 #define __SIGNAL_VIEW_H__
 
-#include <QtGui>
+#include "View.h"
 #include <qwt/qwt_plot.h>
 #include <qwt/qwt_plot_curve.h>
 #include <qwt/qwt_plot_marker.h>
@@ -23,7 +23,7 @@
 #include "SourceProxy.h"
 #include "RealtimePlot.h"
 
-class SignalView : public QWidget {
+class SignalView : public View {
 	
 	Q_OBJECT
 	
@@ -53,6 +53,9 @@ private:
 	void setupPlots();
 	void allocBuffers();
 	void freeBuffers();
+	
+	void setupDockWindows();
+	
 public:
 	
 	SignalView(QWidget* parent=0);
@@ -60,6 +63,9 @@ public:
 	
 
 	void setSourceProxy(SourceProxy* argSrc);
+	
+	void setup();
+	void cleanup();
 	
 };
 

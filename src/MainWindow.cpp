@@ -31,43 +31,12 @@ MainWindow* MainWindow::Instance()
 
 MainWindow::MainWindow() {
 
-
-
-	viewStack = new QStackedWidget(this);
-
-
-	srcSelector = new SourceSelector;
-	viewStack->addWidget(srcSelector);
-
-
-	setCentralWidget(viewStack);
-//    createToolbars();
+    createToolbars();
 
 }
 
 //-----------------------------------------------------------------------------
 
-void MainWindow::pushView(QWidget* argView) {
-	
-	argView->setParent(this);
-	viewStack->addWidget(argView);
-	viewStack->setCurrentWidget(argView);
-	
-}
-
-//-----------------------------------------------------------------------------
-
-QWidget* MainWindow::popView() {
-	
-	QWidget* top = viewStack->currentWidget();
-	
-	viewStack->removeWidget(top);
-	
-	return top;
-	
-}
-
-//-----------------------------------------------------------------------------
 
 MainWindow::~MainWindow() {
     
@@ -78,7 +47,50 @@ MainWindow::~MainWindow() {
 void MainWindow::createToolbars() {
 
     tbAmpControl = addToolBar(tr("Amp Control"));
+	tbAmpControl->setVisible(false);
 
+}
+
+//-----------------------------------------------------------------------------
+
+void MainWindow::enterAcquisitionMode() {
+	
+	tbAmpControl->setVisible(true);
+	
+}
+	
+//-----------------------------------------------------------------------------
+
+void MainWindow::exitAcquisitionMode() {
+	
+	tbAmpControl->setVisible(false);
+	
+}
+
+//-----------------------------------------------------------------------------
+
+void MainWindow::pushView(View* view) {
+
+	viewStack.push_back(view);
+	view->setup();
+	setCentralWidget(view);
+	
+}
+
+//-----------------------------------------------------------------------------
+View* MainWindow::popView() {
+	
+	if(viewStack.size()==0)
+		return NULL;
+	
+	View* topView = viewStack.back();
+	
+	topView->cleanup();
+	viewStack.pop_back();
+	
+	if(viewStack.size()!=0)
+		setCentralWidget(viewStack.back());
+	
 }
 
 //-----------------------------------------------------------------------------

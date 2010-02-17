@@ -96,7 +96,7 @@ bool UsbAmpSource::configure() {
 	amp.setBufferSize(getBlockSize());
 
 	bufferLen = getBlockSize()*getChannelCount();
-	buffer = new char[bufferLen];
+	buffer = new float[bufferLen];
 	
 	channelData.setNumberOfChannels(getChannelCount());
 	channelData.setSamplesPerChannel(getBlockSize());
@@ -133,7 +133,7 @@ void UsbAmpSource::stop() {
 
 ChannelData* UsbAmpSource::getData() {
 
-	amp.getData(buffer, bufferLen);
+	amp.getData(buffer, bufferLen*4);
 	
 	channelData.updateData();
 	return &channelData;

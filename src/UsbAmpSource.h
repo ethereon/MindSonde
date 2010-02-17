@@ -31,7 +31,7 @@ private:
 	AmpLink amp;
 
 	unsigned bufferLen;
-	char* buffer;
+	float* buffer;
 	InterleavedChannelData channelData;
 
 public:

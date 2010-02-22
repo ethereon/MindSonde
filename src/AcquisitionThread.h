@@ -31,7 +31,6 @@ private:
 
 	QMutex mutex;
 	QWaitCondition w;
-	
 
 signals:
 	

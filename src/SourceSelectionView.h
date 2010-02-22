@@ -1,7 +1,7 @@
 /*
  ================================================================
  
- SourceConfig
+ SourceSelectionView
  MindSonde / The Myelin Project
  
  Copyright (C) 2010 Saumitro Dasgupta.
@@ -11,47 +11,42 @@
  ================================================================
  */
 
-
-#ifndef __SOURCE_CONFIG_H__
-#define __SOURCE_CONFIG_H__
+#ifndef __SOURCE_SELECTOR_H__
+#define __SOURCE_SELECTOR_H__
 
 #include "View.h"
 #include "SignalSource.h"
+#include "SourceConfigView.h"
 #include <vector>
 
-
-class SourceConfig : public View {
+class SourceSelectionView : public View {
 
 	Q_OBJECT
-	
-private slots:
 
-	void onCancel();
-	void onStart();
+private slots:
+	
+	void showConfigurationDialog();
+	void refreshSources();
 	
 private:
 	
-	SignalSource* source;
 	
-	QGroupBox* paramGroup;
-	QVBoxLayout* layout;
-	QFormLayout* paramLayout;
+	QListWidget* sourceList;
+	std::vector<SignalSource*> signalSources;
 	
-	std::vector<QWidget*> fields;
+	SourceConfigView* configView;
 	
 	void constructUI();
-	void generateParamInterface();
-	void syncParameters();
-	void addParamField(QWidget* f, Parameter* p);
+	void populateSources();
 	
 public:
-
-	SourceConfig(SignalSource* src, QWidget* parent = 0);
+	
+	SourceSelectionView(QWidget* parent = 0);
 	
 	void setup();
 	void cleanup();
 
 
-	
 };
+
 #endif

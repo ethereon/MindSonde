@@ -41,29 +41,35 @@ void AcquisitionThread::run() {
 	source->start();
 	
 	isStopped = false;
-	
+
 	while(!isStopped) {
-		
+
 		mutex.lock();
-		
+
 		data = source->getData();
 		
 		emit newDataAvailable(data);
-		
-		w.wait(&mutex);
-		
+
+		w.wait(&mutex,500);
+
 		mutex.unlock();
 		
 	}
 	
+
+
 }
 
 //-----------------------------------------------------------------------------
 
 void AcquisitionThread::stop() {
 	
-	isStopped = true;
 
+	isStopped = true;
+	w.wakeAll();
+
+
+	
 }
 
 //-----------------------------------------------------------------------------

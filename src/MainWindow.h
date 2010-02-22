@@ -17,7 +17,7 @@
 
 #include <QtGui>
 
-#include "SourceSelector.h"
+#include "SourceSelectionView.h"
 #include "View.h"
 #include <vector>
 
@@ -30,14 +30,13 @@ private:
 	//Singleton pointer
 	static MainWindow* instance;
 	
-    //Toolbars
-    QToolBar *tbAmpControl;
-
     //Actions
     QAction* axnToggleAmpState;
 	
     void createToolbars();
 
+	QStackedWidget* viewTray;
+	
 	std::vector<View*> viewStack;
 
 	MainWindow();
@@ -48,12 +47,9 @@ public:
 	
     ~MainWindow();
 	
-	void enterAcquisitionMode();
-	void exitAcquisitionMode();
-	
 	void pushView(View* view);
 	View* popView();
-	
+	View* replaceTopView(View* view);
 
 };
 

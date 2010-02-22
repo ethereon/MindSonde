@@ -15,6 +15,7 @@
 #include <stddef.h>
 #include "SinusoidalSource.h"
 #include "UsbAmpSource.h"
+#include <string>
 
 using namespace std;
 
@@ -29,12 +30,35 @@ SourceDiscovery* SourceDiscovery::Instance()
 	return instance;
 }
 
-//TODO: JUST MAKE THIS A BLOODY STATIC
-//TODO: NO WAIT,THINK ABOUT GUSBAMP DISCOVERY
+
 void SourceDiscovery::getSources(vector<SignalSource*>* vecSources)
 {
+	
+	if(usbAmps.size()!=0) {
+		
+		while(!usbAmps.empty()) {
+			
+			delete usbAmps.back();
+			usbAmps.pop_back();
+			
+		}
+		
+	}
 
-	vecSources->push_back(new SinusoidalSource());
-	vecSources->push_back(new UsbAmpSource());
+	vecSources->push_back(&oscillator);	
+	
+	vector<string> availSources;
+	UsbAmpSource::getAvailableSources(&availSources);
+	
+	for(unsigned i=0; i<availSources.size(); ++i) {
+		
+		string name = "g.USBamp / " + availSources[i];
+		UsbAmpSource* src =  new UsbAmpSource(i, name.c_str());
+		usbAmps.push_back(src);
+		vecSources->push_back(src);
+		
+	}
+	
+	
 
 }

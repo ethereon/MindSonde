@@ -12,7 +12,7 @@
  */
 
 #include "MainWindow.h"
-
+#include "MindSondeApp.h"
 
 MainWindow* MainWindow::instance = NULL;
 
@@ -31,7 +31,8 @@ MainWindow* MainWindow::Instance()
 
 MainWindow::MainWindow() {
 
-    createToolbars();
+	viewTray = new QStackedWidget(this);
+	setCentralWidget(viewTray);
 
 }
 
@@ -44,37 +45,13 @@ MainWindow::~MainWindow() {
 
 //-----------------------------------------------------------------------------
 
-void MainWindow::createToolbars() {
-
-    tbAmpControl = addToolBar(tr("Amp Control"));
-	tbAmpControl->setVisible(false);
-
-}
-
-//-----------------------------------------------------------------------------
-
-void MainWindow::enterAcquisitionMode() {
-	
-	tbAmpControl->setVisible(true);
-	
-}
-	
-//-----------------------------------------------------------------------------
-
-void MainWindow::exitAcquisitionMode() {
-	
-	tbAmpControl->setVisible(false);
-	
-}
-
-//-----------------------------------------------------------------------------
-
 void MainWindow::pushView(View* view) {
 
 	viewStack.push_back(view);
 	view->setup();
-	setCentralWidget(view);
 	
+	viewTray->addWidget(view);
+	viewTray->setCurrentWidget(view);
 }
 
 //-----------------------------------------------------------------------------
@@ -85,12 +62,44 @@ View* MainWindow::popView() {
 	
 	View* topView = viewStack.back();
 	
-	topView->cleanup();
+	
+	viewTray->removeWidget(topView);
+
 	viewStack.pop_back();
+	viewTray->setCurrentWidget(viewStack.back());
 	
-	if(viewStack.size()!=0)
-		setCentralWidget(viewStack.back());
+	topView->cleanup();
+
 	
+
+	return topView;
 }
 
 //-----------------------------------------------------------------------------
+
+View* MainWindow::replaceTopView(View* view) {
+	
+	
+	if(viewStack.size()==0)
+		return NULL;
+	
+	view->setup();
+	
+	View* topView = viewStack.back();
+
+
+	viewStack.pop_back();
+	
+	viewStack.push_back(view);
+	
+	viewTray->addWidget(view);
+	viewTray->setCurrentWidget(view);
+	
+	viewTray->removeWidget(topView);
+
+	topView->cleanup();
+
+	
+	return topView;
+
+}

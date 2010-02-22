@@ -30,15 +30,15 @@ public:
 
 	
 	//Characteristics
-	virtual const char* getName()=0;
-	virtual unsigned getSamplingRate()=0;
-	virtual unsigned getChannelCount()=0;
-	virtual unsigned getBlockSize()=0;
+	virtual const char* getName() const = 0;
+	virtual unsigned getSamplingRate() const = 0;
+	virtual unsigned getChannelCount() const = 0;
+	virtual unsigned getBlockSize() const = 0;
 
 	//Actions
 	virtual void connect()=0;
 	virtual void disconnect()=0;
-	virtual bool configure()=0;
+	virtual void configure()=0;
 	virtual void start()=0;
 	virtual void stop()=0;
 	virtual ChannelData* getData()=0;

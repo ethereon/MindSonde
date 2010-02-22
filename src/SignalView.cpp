@@ -17,8 +17,14 @@
 #include "assert.h"
 #include "PlotPalette.h"
 #include "MainWindow.h"
+#include "ParameterRenderer.h"
+#include "MindSondeUtil.h"
+#include <string>
+#include <cmath>
 
-SignalView::SignalView(QWidget* parent) : View(parent) {
+using namespace std;
+
+SignalView::SignalView(const SignalSource* src, QWidget* parent) : View(parent) {
 	
 	plots = NULL;
 	xValues = NULL;
@@ -26,18 +32,92 @@ SignalView::SignalView(QWidget* parent) : View(parent) {
 	source = NULL;
 	dataCursor = 0;
 	channelCount=0;
+	scale = 1;
 	
 	//Default window period of 4 seconds
 	windowPeriod = 4;
 	
-	//Initialize layout
-	layout = new QVBoxLayout(this);
-	this->setLayout(layout);
+	//Setup plot container
+	container = new QWidget(this);
+	QVBoxLayout* vbox = new QVBoxLayout(this);
+	this->setLayout(vbox);
+	vbox->addWidget(container);
+
+	
+	//Setup the signal source and its parameters
+	this->source = src;
+	this->windowLength = (source->getSamplingRate()) * windowPeriod;
+	this->blockSize = source->getBlockSize();
+	this->channelCount = source->getChannelCount();
+	
+	//Setup visible channel selection dialog
+	for(int i=0;i<channelCount;++i) {
+		
+		string title = "Channel " + integerToString(i+1);
+		const char* cstr = title.c_str();
+		
+		const bool* b = visibleChannelParams.addBoolean(cstr,
+														cstr,
+														true);
+		
+		isChannelVisible.push_back(b);
+										
+		
+	}
+	
+	channelDialog = ParameterRenderer::createParameterDialog(&visibleChannelParams, this);
+	channelDialog->setWindowTitle("Visible Channels");
+	
+	connect(channelDialog, SIGNAL(accepted()), this, SLOT(updateView()));
+
+	//Allocate the buffers for the samples
+	allocBuffers();
+	
+	//Construct the plots
+	setupPlots();
+	
+	//Subscribe to receive acquisition data
+	connect(AcquisitionCentral::Instance(),
+			SIGNAL(newDataAvailable(ChannelData*)),
+			this,
+			SLOT(processNewData(ChannelData*)));
 	
 }
 
 SignalView::~SignalView() {
 
+	if(plots!=NULL) {
+		
+		delete [] markers;
+		delete [] plots;
+		
+	}
+	
+	AcquisitionCentral::Instance()->unsubscribe();
+	this->disconnect();
+	
+	freeBuffers();	
+	
+}
+
+void SignalView::updateView() {
+	
+	for(int i=0;i<channelCount;++i) {
+		
+		if(*(isChannelVisible[i]))
+				plots[i].setVisible(true);
+		else 
+			plots[i].setVisible(false);
+		
+	}
+		
+}
+
+void SignalView::showChannelSelector() {
+	
+	channelDialog->show();
+	channelDialog->raise();
+	channelDialog->activateWindow();
 	
 	
 }
@@ -96,9 +176,12 @@ void SignalView::freeBuffers() {
 
 void SignalView::setupPlots() {
 	
+
 	assert(source!=NULL);
 	assert(channels!=NULL);
 
+	QVBoxLayout* layout = new QVBoxLayout(container);
+	
 	layout->setSpacing(1);
 	plots = new RealtimePlot[this->channelCount];
 	markers = new QwtPlotMarker[this->channelCount];
@@ -113,14 +196,13 @@ void SignalView::setupPlots() {
 		curve->setPen(QPen(palette.getCurveColor(i)));
 		layout->addWidget(&plots[i]);
 		
-		if(i!=(channelCount-1))
-		   plots[i].enableAxis(QwtPlot::xBottom, false);
+
+		plots[i].enableAxis(QwtPlot::xBottom, false);
 		   
-		//plots[i].enableAxis(QwtPlot::yLeft, false);
+		plots[i].enableAxis(QwtPlot::yLeft, false);
 		plots[i].setMargin(0);
 		plots[i].setCanvasBackground(palette.getBackgroundColor());
-		plots[i].setAxisTitle(QwtPlot::yLeft, QString("Ch ")+QString::number(i+1));
-		
+
 		//Setup update marker
 		markers[i].setLinePen(QPen(Qt::red));
 		markers[i].setValue(0.0,0.0);
@@ -131,34 +213,17 @@ void SignalView::setupPlots() {
 	
 }
 
-
-
-void SignalView::setSourceProxy(SourceProxy* argSrc) {
-	
-	
-	this->source = argSrc;
-	
-	this->windowLength = (source->getSamplingRate()) * windowPeriod;
-	this->blockSize = source->getBlockSize();
-	this->channelCount = source->getChannelCount();
-	
-	freeBuffers();
-	allocBuffers();
-	setupPlots();
-	
-	connect(AcquisitionCentral::Instance(),
-			SIGNAL(newDataAvailable(ChannelData*)),
-			this,
-			SLOT(processNewData(ChannelData*)));
-	
-}
-
 void SignalView::processNewData(ChannelData* channelData) {
 	
 	int endCursor = (dataCursor+blockSize)%windowLength;
 	
 	for(int i=0; i<channelCount; ++i) {
 		
+
+		if(!(*(isChannelVisible[i]))) {
+			continue;
+		}
+
 		float *values =(float*)channelData->getDataForChannel(i+1);
 		
 		int cursor = dataCursor;
@@ -180,30 +245,71 @@ void SignalView::processNewData(ChannelData* channelData) {
 	
 }
 
-void SignalView::setupDockWindows() {
+void SignalView::autoscalePlots() {
 	
-	QDockWidget* dock = new QDockWidget("Configure",this);
-	dock->setAllowedAreas(Qt::LeftDockWidgetArea |
-						  Qt::RightDockWidgetArea |
-						  Qt::TopDockWidgetArea |
-						  Qt::BottomDockWidgetArea);
+	if(!axnAutoscale->isChecked()) return;
 	
-	MainWindow::Instance()->addDockWidget(Qt::LeftDockWidgetArea, dock);
+	for(int i=0;i<channelCount;++i)
+		plots[i].setAxisAutoScale(QwtPlot::yLeft);
 	
-	QToolBox* toolbox = new QToolBox(this);
-	dock->setWidget(toolbox);
+}
+
+void SignalView::scalePlots() {
+	
+	if(axnAutoscale->isChecked()) return;
+	
+	for(int i=0; i<channelCount; ++i)
+		plots[i].setAxisScale(QwtPlot::yLeft, -scale, scale, 0);
+
+	
+}
+
+void SignalView::scaleChanged(int index) {
+	
+	scale = pow(10.0, index);
+	scalePlots();
 	
 }
 
 void SignalView::setup() {
 	
-	MainWindow::Instance()->enterAcquisitionMode();
-	//setupDockWindows();
+	tbSignalView = new QToolBar(this);
 
+	QAction* axnSelectChannel = new QAction(QIcon(":/icons/images/channels.png"), "Select Channels", this);
+	tbSignalView->addAction(axnSelectChannel);
+	
+	QActionGroup* axnScaleGroup = new QActionGroup(this);
+	
+	axnAutoscale = new QAction(QIcon(":/icons/images/autoscale.png"), "Autoscale", this);
+	axnAutoscale->setCheckable(true);
+	axnAutoscale->setChecked(true);
+	tbSignalView->addAction(axnAutoscale);
+	axnScaleGroup->addAction(axnAutoscale);
+	
+	QAction* axnScale = new QAction(QIcon(":/icons/images/scale.png"), "Scale", this);
+	axnScale->setCheckable(true);
+	tbSignalView->addAction(axnScale);
+	axnScaleGroup->addAction(axnScale);
+	
+	QComboBox* comboScale = new QComboBox(this);
+	for(int i=0;i<10;++i)
+		comboScale->addItem(QString("x E")+QString::number(i));
+	
+	tbSignalView->addWidget(comboScale);
+	
+
+	
+	
+	MainWindow::Instance()->addToolBar(tbSignalView);
+	connect(axnSelectChannel, SIGNAL(triggered()), this, SLOT(showChannelSelector()));
+	connect(axnAutoscale, SIGNAL(changed()), this, SLOT(autoscalePlots()));
+	connect(axnScale, SIGNAL(changed()), this, SLOT(scalePlots()));
+	connect(comboScale, SIGNAL(currentIndexChanged(int)), this, SLOT(scaleChanged(int)));
+	
 }
 
 void SignalView::cleanup() {
 	
-	MainWindow::Instance()->exitAcquisitionMode();
+	MainWindow::Instance()->removeToolBar(tbSignalView);
 
 }

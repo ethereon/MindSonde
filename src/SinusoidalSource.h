@@ -52,12 +52,12 @@ public:
 	ParameterSet* getParameters();
 	
 
-	bool configure();
-	const char* getName();
+	void configure();
+	const char* getName() const;
 	
-	unsigned getSamplingRate();
-	unsigned getBlockSize();
-	unsigned getChannelCount();
+	unsigned getSamplingRate() const;
+	unsigned getBlockSize() const ;
+	unsigned getChannelCount() const;
 
 	void connect() {}
 	void disconnect() {}

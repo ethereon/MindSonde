@@ -19,11 +19,18 @@
 #include <assert.h>
 
 class EnumParameter : public Parameter {
+	
+	Q_OBJECT
 
 private:
 	
 	std::vector<std::string> options;
-	unsigned selectedIndex;
+	int selectedIndex;
+
+public slots:
+
+	void updateValue(int index) { selectedIndex = index; }
+	
 public:
 	
 	EnumParameter() { selectedIndex=0; }
@@ -52,11 +59,10 @@ public:
 		selectedIndex = idx;
 	}
 	
-	std::string getValue() {
-		
-		return options[selectedIndex];
-	}
+	int getValue() { return selectedIndex; }
 	
+	
+	const int* getReference() { return &selectedIndex; }
 };
 
 #endif

@@ -30,7 +30,7 @@
 
 #define DEFAULT_FREQUENCY 11
 #define DEFAULT_SAMPLING_RATE 8*DEFAULT_FREQUENCY
-#define DEFAULT_CHANNEL_COUNT 1
+#define DEFAULT_CHANNEL_COUNT 4
 #define DEFAULT_BLOCK_SIZE 10
 #define DEFAULT_IS_NOISY true
 #define SECONDS_FROM_LAUNCH (clock()/(double)CLOCKS_PER_SEC)
@@ -88,14 +88,14 @@ void SinusoidalSource::setupParameters() {
 	
 }
 
-ParameterSet* SinusoidalSource::getParameters() {
+ParameterSet* SinusoidalSource::getParameters(){
 	
 	return &params;
 	
 }
 
 
-bool SinusoidalSource::configure() {
+void SinusoidalSource::configure() {
 	
 	IntegerParameter* ip = (IntegerParameter*)params.getParameterByName(SOURCE_FREQ);
 	this->frequency = ip->getValue();
@@ -122,10 +122,9 @@ bool SinusoidalSource::configure() {
 	
 	samples = new float[blockSize*channelCount];
 
-	return true;
 }
 
-const char* SinusoidalSource::getName() {
+const char* SinusoidalSource::getName() const {
 	
 	return SOURCE_NAME;
 	
@@ -157,7 +156,7 @@ ChannelData* SinusoidalSource::getData() {
 			samples[offset+j]= y;
 			
 			if(isNoisy)
-				samples[offset+j] +=(rand()%10);
+				samples[offset+j] += ((rand()%10))/20.0;
 			
 		}
 		
@@ -171,19 +170,19 @@ ChannelData* SinusoidalSource::getData() {
 
 }
 
-unsigned SinusoidalSource::getSamplingRate() {
+unsigned SinusoidalSource::getSamplingRate() const {
 	
 	return samplingRate;
 	
 }
 
-unsigned SinusoidalSource::getBlockSize() {
+unsigned SinusoidalSource::getBlockSize() const {
 	
 	return blockSize;
 	
 }
 
-unsigned SinusoidalSource::getChannelCount() {
+unsigned SinusoidalSource::getChannelCount() const {
 	
 	return channelCount;
 

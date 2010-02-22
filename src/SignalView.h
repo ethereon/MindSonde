@@ -19,9 +19,10 @@
 #include <qwt/qwt_plot_curve.h>
 #include <qwt/qwt_plot_marker.h>
 
-//#include "SignalReceiver.h"
-#include "SourceProxy.h"
+#include "ChannelData.h"
+#include "SignalSource.h"
 #include "RealtimePlot.h"
+#include <vector>
 
 class SignalView : public View {
 	
@@ -31,38 +32,48 @@ class SignalView : public View {
 private slots:
 
 	void processNewData(ChannelData* channelData);
+	void showChannelSelector();
+	void updateView();
+	void autoscalePlots();
+	void scalePlots();
+	void scaleChanged(int index);
 
 private:
+		
+	QToolBar* tbSignalView;
+	QWidget* container;
 	
-	QVBoxLayout* layout;
+	QAction* axnAutoscale;
 	
 	int windowPeriod;
 	int windowLength;
 	int blockSize;
 	int dataCursor;
 	int channelCount; 
+	double scale;
 
 	RealtimePlot* plots;
 	QwtPlotMarker* markers;
 	
-	SourceProxy* source;
+	const SignalSource* source;
 	
 	double* xValues;
 	double** channels;
+	
+	ParameterSet visibleChannelParams;
+	QDialog* channelDialog;
 	
 	void setupPlots();
 	void allocBuffers();
 	void freeBuffers();
 	
-	void setupDockWindows();
+	std::vector<const bool*> isChannelVisible;
 	
 public:
 	
-	SignalView(QWidget* parent=0);
+	SignalView(const SignalSource* src, QWidget* parent=0);
 	~SignalView();
 	
-
-	void setSourceProxy(SourceProxy* argSrc);
 	
 	void setup();
 	void cleanup();

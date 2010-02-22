@@ -17,6 +17,8 @@
 
 #include "SignalSource.h"
 #include <vector>
+#include "UsbAmpSource.h"
+#include "SinusoidalSource.h"
 
 class SourceDiscovery {
 	
@@ -24,8 +26,11 @@ private:
 	
  	SourceDiscovery() {}
 
-
 	static SourceDiscovery* instance;
+	
+	std::vector<UsbAmpSource*> usbAmps;
+	
+	SinusoidalSource oscillator;
 	
 public:
 	

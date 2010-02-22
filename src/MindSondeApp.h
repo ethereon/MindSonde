@@ -14,20 +14,42 @@
 #include "MainWindow.h"
 #include "AcquisitionThread.h"
 #include "SignalSource.h"
+#include "FileOutputDaemon.h"
+#include "SignalView.h"
 #include <QtGui>
 
-class MindSondeApp {
+class MindSondeApp : public QObject {
+	
+	Q_OBJECT
 
 private:
 	
 	MindSondeApp();
+	
+	QApplication* app;
 	
 	MainWindow* mainWindow;
 	
 	//Singleton pointer
 	static MindSondeApp* instance;
 	
-	SourceSelector* sourceSelector;
+	QToolBar* acqToolbar;
+	
+	SourceSelectionView* sourceSelector;
+	
+	SignalSource* activeSource;
+	
+	FileOutputDaemon* fileDaemon;
+	
+	SignalView* signalView;
+	
+	void createToolbar();
+	
+	
+public slots:
+	
+	void stopAcquisition();
+	void showSignalView();
 		
 public:
 	
@@ -35,4 +57,9 @@ public:
 	
 	int execute(int argc, char** argv);
 	
+	void setActiveSource(SignalSource* argSource);
+	void setFileOutputDaemon(FileOutputDaemon* argDaemon);
+	
+	void startAcquisition();
+
 };

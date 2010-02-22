@@ -92,6 +92,10 @@ void AcquisitionCentral::releaseData() {
 void AcquisitionCentral::start() {
 	
 	assert(source!=NULL);
+	
+	//Tell the source to start acquisition
+	source->start();
+	
 	acqThread.setSignalSource(source);
 	acqThread.start();
 	
@@ -101,9 +105,15 @@ void AcquisitionCentral::start() {
 //-----------------------------------------------------------------------------
 
 void AcquisitionCentral::stop() {
-	
-	acqThread.stop();
 
+
+	acqThread.stop();
+	acqThread.wait();
+
+	//Stop the source AFTER the thread. Since the thread makes a blocking
+	//call to the source's getData method, stopping it first could cause
+	//the thread to freeze / exceptions.
+	source->stop();
 
 }
 

@@ -1,7 +1,7 @@
 /*
  ================================================================
  
- SourceSelector
+ ImpedanceView
  MindSonde / The Myelin Project
  
  Copyright (C) 2010 Saumitro Dasgupta.
@@ -11,38 +11,39 @@
  ================================================================
  */
 
-#ifndef __SOURCE_SELECTOR_H__
-#define __SOURCE_SELECTOR_H__
+#ifndef __IMPEDANCE_VIEW_H__
+#define __IMPEDANCE_VIEW_H__
 
 #include "View.h"
 #include "SignalSource.h"
-#include <vector>
 
-class SourceSelector : public View {
-
+class ImpedanceView : public View {
+	
 	Q_OBJECT
-
+	
 private slots:
-	
-	void showConfigurationDialog();
-	
+
+	void processNewData(ChannelData* data);
+
 private:
 	
+	const SignalSource* source;
 	
-	QListWidget* sourceList;
-	std::vector<SignalSource*> signalSources;
+	QLabel* zLabels;
 	
-	void constructUI();
-	void populateSources();
+	int channelCount;
 	
 public:
 	
-	SourceSelector(QWidget* parent = 0);
+	ImpedanceView(const SignalSource* src, QWidget* parent=0);
+	~ImpedanceView();
+	
+
 	
 	void setup();
 	void cleanup();
-
-
+	
 };
+
 
 #endif

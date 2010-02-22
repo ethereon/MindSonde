@@ -19,9 +19,15 @@
 
 class BooleanParameter : public Parameter {
 	
+	Q_OBJECT
+	
 private:
 	
 	bool value;
+
+public slots:
+	
+	void updateValue(int state) { value = (state==Qt::Checked); }
 	
 public:
 	
@@ -30,6 +36,7 @@ public:
 	
 	void setValue(bool v) { value = v; }
 	bool getValue() { return value; }
+	const bool* getReference() { return &value; }
 	
 };
 

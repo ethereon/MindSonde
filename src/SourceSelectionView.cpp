@@ -1,7 +1,7 @@
 /*
  ================================================================
  
- SourceSelector
+ SourceSelectionView
  MindSonde / The Myelin Project
  
  Copyright (C) 2010 Saumitro Dasgupta.
@@ -12,37 +12,61 @@
  */
 
 
-#include "SourceSelector.h"
+#include "SourceSelectionView.h"
 #include <QtGui>
 #include "SourceDiscovery.h"
 #include <vector>
 #include "SignalSource.h"
-#include "SourceConfig.h"
 #include "MainWindow.h"
+#include "MindSondeUtil.h"
+#include "MException.h"
 
 using namespace std;
 
-SourceSelector::SourceSelector(QWidget *parent) : View(parent)
+SourceSelectionView::SourceSelectionView(QWidget *parent) : View(parent)
 {
+	configView = NULL;
 	
 	constructUI();
 	populateSources();
 
 }
 
-void SourceSelector::showConfigurationDialog()
-{
-
-	SignalSource* selectedSource = signalSources[sourceList->currentRow()];
+void SourceSelectionView::refreshSources() {
 	
-	selectedSource->connect();
+	sourceList->clear();
+	signalSources.clear();
 	
-	SourceConfig* cfgDialog = new SourceConfig(selectedSource, this);
-	MainWindow::Instance()->pushView(cfgDialog);
+	populateSources();
 	
 }
 
-void SourceSelector::populateSources() {
+void SourceSelectionView::showConfigurationDialog()
+{
+
+	SignalSource* selectedSource = signalSources[sourceList->currentRow()];
+
+	try {
+		
+		selectedSource->connect();
+				
+		configView = new SourceConfigView(selectedSource, this);
+		MainWindow::Instance()->pushView(configView);	
+				
+	}
+	catch (MException e) {
+		
+		displayException(&e, "Unable to connected to the selected signal source");
+		
+		
+	}
+
+	
+
+	
+}
+
+void SourceSelectionView::populateSources() {
 	
 	SourceDiscovery* s = SourceDiscovery::Instance();
 	
@@ -61,7 +85,7 @@ void SourceSelector::populateSources() {
 	sourceList->setCurrentRow(0);	
 }
 
-void SourceSelector::constructUI() {
+void SourceSelectionView::constructUI() {
 
 	//Create paramLayout
 	QVBoxLayout *paramLayout = new QVBoxLayout;
@@ -97,14 +121,16 @@ void SourceSelector::constructUI() {
 	//Make conections
 	
 	QObject::connect(btnConnect, SIGNAL(clicked()), this, SLOT(showConfigurationDialog()));
+	QObject::connect(btnRefresh, SIGNAL(clicked()), this, SLOT(refreshSources()));
+
 	
 
 }
 
-void SourceSelector::setup() {
+void SourceSelectionView::setup() {
 
 }
 
-void SourceSelector::cleanup() {
+void SourceSelectionView::cleanup() {
 
 }

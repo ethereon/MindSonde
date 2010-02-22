@@ -1,0 +1,10 @@
+<RCC>
+    <qresource prefix="/icons">
+        <file>images/stop-acq.png</file>
+		<file>images/sine-wave.png</file>	
+		<file>images/impedance.png</file>
+		<file>images/autoscale.png</file>
+		<file>images/scale.png</file>
+		<file>images/channels.png</file>
+    </qresource>
+</RCC>

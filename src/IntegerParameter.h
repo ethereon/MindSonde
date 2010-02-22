@@ -18,9 +18,15 @@
 
 class IntegerParameter : public Parameter {
 	
+	Q_OBJECT
+	
 private:
 	
-	long value;
+	int value;
+	
+public slots:
+	
+	void updateValue(const QString& newValue) { value = newValue.toInt(); }																	
 	
 public:
 	
@@ -29,6 +35,7 @@ public:
 	
 	void setValue(long v) { value = v; }
 	long getValue() { return value; }
+	const int* getReference() { return &value; }
 	
 };
 

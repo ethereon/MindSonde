@@ -1,9 +1,11 @@
 TEMPLATE = app
 TARGET = MindSonde
-CONFIG +=qt debug
+CONFIG += qt \
+    debug
 SOURCES = src/*.cpp
 HEADERS = src/*.h
-INCLUDEPATH +=../BioAmp/include
+INCLUDEPATH += ../BioAmp/include
 MOC_DIR = build/mocFiles
-LIBS += -lqwt -lbioamp
-
+LIBS += -lqwt \
+    -lbioamp
+RESOURCES += MindSonde.qrc

@@ -15,7 +15,11 @@
 #define __MINDSONDE_PARAMETER_H__
 
 #include <string>
-class Parameter {
+#include <QtGui>
+
+class Parameter : public QObject {
+	
+	Q_OBJECT
 	
 private:
 	

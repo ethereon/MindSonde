@@ -60,7 +60,6 @@ public:
 	void subscribe();
 	void unsubscribe();
 	
-	
 	void releaseData();
 	
 	

@@ -17,6 +17,8 @@
 #include "SignalSource.h"
 #include "AmpLink.h"
 #include "InterleavedChannelData.h"
+#include <string>
+#include <vector>
 
 class UsbAmpSource :  public SignalSource{
 	
@@ -26,31 +28,47 @@ private:
 	
 	ParameterSet params;
 	
-	int getIntegerParam(const char* name);
-	
 	AmpLink amp;
 
 	unsigned bufferLen;
 	float* buffer;
-	InterleavedChannelData channelData;
+	
+	//Parameters
+	int channelCount;
+	const int* blockSize;
+	const int* samplingRateIdx;
+	const int* modeIndex;
+	const bool* enableTriggerLine;
+	const int* bandpassIndex;
+	const int* notchIndex;
+	
+	std::vector<const bool*> selectedChannels;
 
+	InterleavedChannelData channelData;
+	
+	string name;
+	
+	int index;
+	
 public:
 	
-	UsbAmpSource();
+	UsbAmpSource(int argIndex, const char* argName);
 	~UsbAmpSource();
 	
 	ParameterSet* getParameters();
 	
+	static void getAvailableSources(std::vector<std::string>* devices);
+	
 	//Characteristics
-	const char* getName();
-	unsigned getSamplingRate();
-	unsigned getChannelCount();
-	unsigned getBlockSize();
+	const char* getName() const;
+	unsigned getSamplingRate() const;
+	unsigned getChannelCount() const;
+	unsigned getBlockSize() const;
 	
 	//Actions
 	void connect();
 	void disconnect();
-	bool configure();
+	void configure();
 	void start();
 	void stop();
 	ChannelData* getData();

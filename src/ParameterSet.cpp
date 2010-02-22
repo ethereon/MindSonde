@@ -17,6 +17,8 @@
 #include "EnumParameter.h"
 #include "IntegerParameter.h"
 #include "BooleanParameter.h"
+#include "ParameterGroup.h"
+#include "MindSondeUtil.h"
 
 using namespace std;
 
@@ -41,7 +43,7 @@ ParameterSet::~ParameterSet() {
 
 }
 
-void ParameterSet::addBoolean(const char* name, const char* title, bool value) {
+const bool* ParameterSet::addBoolean(const char* name, const char* title, bool value) {
 
 	BooleanParameter* bp = new BooleanParameter();	
 	bp->setName(name);
@@ -50,9 +52,11 @@ void ParameterSet::addBoolean(const char* name, const char* title, bool value) {
 	
 	params.push_back((Parameter*)bp);
 	
+	return bp->getReference();
+	
 }
 
-void ParameterSet::addInteger(const char* name, const char* title, long value) {
+const int* ParameterSet::addInteger(const char* name, const char* title, int value) {
 	
 	IntegerParameter* ip = new IntegerParameter();
 	ip->setName(name);
@@ -61,9 +65,11 @@ void ParameterSet::addInteger(const char* name, const char* title, long value) {
 	
 	params.push_back((Parameter*)ip);
 	
+	return ip->getReference();
+	
 }
 
-void ParameterSet::addEnum(const char* name, const char* title, const char** values, unsigned count) {
+const int* ParameterSet::addEnum(const char* name, const char* title, const char** values, unsigned count) {
 	
 	EnumParameter* ep = new EnumParameter();
 	ep->setName(name);
@@ -73,9 +79,57 @@ void ParameterSet::addEnum(const char* name, const char* title, const char** val
 		ep->addOption(values[i]);
 	
 	params.push_back((Parameter*)ep);
+	
+	return ep->getReference();
 }
 
-Parameter* ParameterSet::getParameterByName(const char* name) {
+const int* ParameterSet::addEnum(const char* name, const char* title, const int* values, unsigned count) {
+	
+	
+	EnumParameter* ep = new EnumParameter();
+	ep->setName(name);
+	ep->setTitle(title);
+	
+	for(unsigned i=0; i<count;++i)
+		ep->addOption(integerToString(values[i]));
+	
+	params.push_back((Parameter*)ep);
+	
+	return ep->getReference();
+
+	
+	
+}
+const int* ParameterSet::addEnum(const char* name, const char* title, const vector<string>* values) {
+	
+	EnumParameter* ep = new EnumParameter();
+	ep->setName(name);
+	ep->setTitle(title);
+
+	int count = (int)values->size();
+	
+	for(int i=0;i<count;++i)
+		ep->addOption((*values)[i]);
+	
+	params.push_back((Parameter*)ep);
+	
+	return ep->getReference();
+	
+}
+
+ParameterSet* ParameterSet::addGroup(const char* name, const char* title) {
+	
+	ParameterGroup* pg = new ParameterGroup();
+	pg->setName(name);
+	pg->setTitle(title);
+	
+	params.push_back((Parameter*)pg);
+	
+	return pg->getParameterSet();
+	
+}
+
+Parameter* ParameterSet::getParameterByName(const char* name) const{
 	
 	unsigned len = params.size();
 	

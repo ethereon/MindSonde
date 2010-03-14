@@ -22,6 +22,9 @@
 
 using namespace std;
 
+
+//-----------------------------------------------------------------------------
+
 QDialog* ParameterRenderer::createParameterDialog(ParameterSet* params, QWidget* parent) {
 		
 	QDialog* dialog = new QDialog(parent);
@@ -44,6 +47,8 @@ QDialog* ParameterRenderer::createParameterDialog(ParameterSet* params, QWidget*
 	
 	
 }
+
+//-----------------------------------------------------------------------------
 
 void ParameterRenderer::generateUI(QWidget* host, ParameterSet* params) {
 	
@@ -104,6 +109,6 @@ void ParameterRenderer::generateUI(QWidget* host, ParameterSet* params) {
 		
 	}	
 	
-	
-	
 }
+
+//-----------------------------------------------------------------------------

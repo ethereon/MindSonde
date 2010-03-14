@@ -19,7 +19,12 @@
 
 using namespace std;
 
+//-----------------------------------------------------------------------------
+
 SourceDiscovery* SourceDiscovery::instance = NULL;
+
+
+//-----------------------------------------------------------------------------
 
 SourceDiscovery* SourceDiscovery::Instance()
 {
@@ -30,6 +35,7 @@ SourceDiscovery* SourceDiscovery::Instance()
 	return instance;
 }
 
+//-----------------------------------------------------------------------------
 
 void SourceDiscovery::getSources(vector<SignalSource*>* vecSources)
 {
@@ -62,3 +68,5 @@ void SourceDiscovery::getSources(vector<SignalSource*>* vecSources)
 	
 
 }
+
+//-----------------------------------------------------------------------------

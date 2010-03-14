@@ -20,6 +20,10 @@
 #include <QTimer>
 #include <cmath>
 
+using namespace std;
+
+//-----------------------------------------------------------------------------
+
 #define SOURCE_NAME "Oscillator ( simulated sinusoidal )"
 
 #define SOURCE_FREQ	"sFeq"
@@ -39,7 +43,8 @@
 #define PI 3.14159265
 #endif
 
-using namespace std;
+//-----------------------------------------------------------------------------
+
 
 SinusoidalSource::SinusoidalSource() {
 	
@@ -54,12 +59,16 @@ SinusoidalSource::SinusoidalSource() {
 	
 }
 
+//-----------------------------------------------------------------------------
+
 SinusoidalSource::~SinusoidalSource() {
 	
 	if(samples)
 		delete [] samples;
 	
 }
+
+//-----------------------------------------------------------------------------
 
 void SinusoidalSource::setupParameters() {
 	
@@ -88,12 +97,15 @@ void SinusoidalSource::setupParameters() {
 	
 }
 
+//-----------------------------------------------------------------------------
+
 ParameterSet* SinusoidalSource::getParameters(){
 	
 	return &params;
 	
 }
 
+//-----------------------------------------------------------------------------
 
 void SinusoidalSource::configure() {
 	
@@ -124,11 +136,15 @@ void SinusoidalSource::configure() {
 
 }
 
+//-----------------------------------------------------------------------------
+
 const char* SinusoidalSource::getName() const {
 	
 	return SOURCE_NAME;
 	
 }
+
+//-----------------------------------------------------------------------------
 
 void SinusoidalSource::start() {
 	
@@ -138,11 +154,14 @@ void SinusoidalSource::start() {
 	
 }
 
+//-----------------------------------------------------------------------------
+
 void SinusoidalSource::stop() {
 	
 	
 }
 
+//-----------------------------------------------------------------------------
 
 ChannelData* SinusoidalSource::getData() {
 	
@@ -170,11 +189,15 @@ ChannelData* SinusoidalSource::getData() {
 
 }
 
+//-----------------------------------------------------------------------------
+
 unsigned SinusoidalSource::getSamplingRate() const {
 	
 	return samplingRate;
 	
 }
+
+//-----------------------------------------------------------------------------
 
 unsigned SinusoidalSource::getBlockSize() const {
 	
@@ -182,8 +205,12 @@ unsigned SinusoidalSource::getBlockSize() const {
 	
 }
 
+//-----------------------------------------------------------------------------
+
 unsigned SinusoidalSource::getChannelCount() const {
 	
 	return channelCount;
 
 }
+
+//-----------------------------------------------------------------------------

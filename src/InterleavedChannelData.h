@@ -28,8 +28,10 @@ protected:
 
     unsigned int channelCount;
     unsigned int samplesPerChannel;
+	unsigned int totalSamples;
 
     bool isDemuxed;
+	bool reallocChannels;
 
     vector<float*> channels;
 

@@ -22,12 +22,15 @@
 
 using namespace std;
 
+//-----------------------------------------------------------------------------
+
 ParameterSet::ParameterSet() {
 
 	idx=0;
 
 }
 
+//-----------------------------------------------------------------------------
 
 ParameterSet::~ParameterSet() {
 
@@ -43,6 +46,8 @@ ParameterSet::~ParameterSet() {
 
 }
 
+//-----------------------------------------------------------------------------
+
 const bool* ParameterSet::addBoolean(const char* name, const char* title, bool value) {
 
 	BooleanParameter* bp = new BooleanParameter();	
@@ -56,6 +61,8 @@ const bool* ParameterSet::addBoolean(const char* name, const char* title, bool v
 	
 }
 
+//-----------------------------------------------------------------------------
+
 const int* ParameterSet::addInteger(const char* name, const char* title, int value) {
 	
 	IntegerParameter* ip = new IntegerParameter();
@@ -68,6 +75,8 @@ const int* ParameterSet::addInteger(const char* name, const char* title, int val
 	return ip->getReference();
 	
 }
+
+//-----------------------------------------------------------------------------
 
 const int* ParameterSet::addEnum(const char* name, const char* title, const char** values, unsigned count) {
 	
@@ -83,6 +92,8 @@ const int* ParameterSet::addEnum(const char* name, const char* title, const char
 	return ep->getReference();
 }
 
+//-----------------------------------------------------------------------------
+
 const int* ParameterSet::addEnum(const char* name, const char* title, const int* values, unsigned count) {
 	
 	
@@ -96,10 +107,11 @@ const int* ParameterSet::addEnum(const char* name, const char* title, const int*
 	params.push_back((Parameter*)ep);
 	
 	return ep->getReference();
-
-	
 	
 }
+
+//-----------------------------------------------------------------------------
+
 const int* ParameterSet::addEnum(const char* name, const char* title, const vector<string>* values) {
 	
 	EnumParameter* ep = new EnumParameter();
@@ -117,6 +129,8 @@ const int* ParameterSet::addEnum(const char* name, const char* title, const vect
 	
 }
 
+//-----------------------------------------------------------------------------
+
 ParameterSet* ParameterSet::addGroup(const char* name, const char* title) {
 	
 	ParameterGroup* pg = new ParameterGroup();
@@ -128,6 +142,8 @@ ParameterSet* ParameterSet::addGroup(const char* name, const char* title) {
 	return pg->getParameterSet();
 	
 }
+
+//-----------------------------------------------------------------------------
 
 Parameter* ParameterSet::getParameterByName(const char* name) const{
 	
@@ -141,12 +157,16 @@ Parameter* ParameterSet::getParameterByName(const char* name) const{
 	
 }
 
+//-----------------------------------------------------------------------------
+
 Parameter* ParameterSet::first() {
 	
 	idx=1;
 	return params[0];
 	
 }
+
+//-----------------------------------------------------------------------------
 
 Parameter* ParameterSet::next() {
 
@@ -157,3 +177,4 @@ Parameter* ParameterSet::next() {
 	
 }
 
+//-----------------------------------------------------------------------------

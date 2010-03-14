@@ -18,12 +18,15 @@
 
 using namespace std;
 
+//-----------------------------------------------------------------------------
+
 InterleavedDataSerializer::InterleavedDataSerializer() {
 	
 	fp = NULL;
 	
 }
 
+//-----------------------------------------------------------------------------
 
 InterleavedDataSerializer::~InterleavedDataSerializer() {
 	
@@ -31,6 +34,8 @@ InterleavedDataSerializer::~InterleavedDataSerializer() {
 		close();
 	
 }
+
+//-----------------------------------------------------------------------------
 
 void InterleavedDataSerializer::openFile(const char* argFilename) {
 	
@@ -43,6 +48,8 @@ void InterleavedDataSerializer::openFile(const char* argFilename) {
 	
 }
 
+//-----------------------------------------------------------------------------
+
 void InterleavedDataSerializer::close() {
 	
 	assert(fp!=NULL);
@@ -51,11 +58,15 @@ void InterleavedDataSerializer::close() {
 	
 }
 
+//-----------------------------------------------------------------------------
+
 bool InterleavedDataSerializer::isOpen() {
 
 	return fp!=NULL;
 	
 }
+
+//-----------------------------------------------------------------------------
 
 const char* InterleavedDataSerializer::getFilename() {
 	
@@ -63,6 +74,7 @@ const char* InterleavedDataSerializer::getFilename() {
 	
 }
 
+//-----------------------------------------------------------------------------
 
 void InterleavedDataSerializer::writeHeader(const SignalSource* source) {
 	
@@ -82,6 +94,8 @@ void InterleavedDataSerializer::writeHeader(const SignalSource* source) {
 	
 }
 
+//-----------------------------------------------------------------------------
+
 void InterleavedDataSerializer::writeData(ChannelData* channelData) {
 	
 	assert(fp);
@@ -91,3 +105,5 @@ void InterleavedDataSerializer::writeData(ChannelData* channelData) {
 	
 	
 }
+
+//-----------------------------------------------------------------------------

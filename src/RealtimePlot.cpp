@@ -17,6 +17,8 @@
 #include <qwt/qwt_plot_curve.h>
 #include <qwt/qwt_plot_canvas.h>
 
+//-----------------------------------------------------------------------------
+
 RealtimePlot::RealtimePlot(QWidget* parent): QwtPlot(parent)
 {
 	
@@ -33,3 +35,5 @@ RealtimePlot::RealtimePlot(QWidget* parent): QwtPlot(parent)
 	canvas()->setLineWidth(0);
 
 }
+
+//-----------------------------------------------------------------------------

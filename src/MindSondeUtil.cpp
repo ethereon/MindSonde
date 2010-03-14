@@ -19,6 +19,8 @@
 
 using namespace std;
 
+//-----------------------------------------------------------------------------
+
 string integerToString(const long& v) {
 	
 	stringstream str;
@@ -26,6 +28,8 @@ string integerToString(const long& v) {
 	return str.str();
 	
 }
+
+//-----------------------------------------------------------------------------
 
 string floatToString(const float& v) {
 	
@@ -35,6 +39,7 @@ string floatToString(const float& v) {
 	
 }
 
+//-----------------------------------------------------------------------------
 
 void displayException(MException* ex, const char* msg) {
 	
@@ -49,3 +54,5 @@ void displayException(MException* ex, const char* msg) {
 	msgBox.exec();
 
 }
+
+//-----------------------------------------------------------------------------

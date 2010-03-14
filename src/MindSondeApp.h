@@ -15,12 +15,29 @@
 #include "AcquisitionThread.h"
 #include "SignalSource.h"
 #include "FileOutputDaemon.h"
+#include "ImpedanceView.h"
 #include "SignalView.h"
 #include <QtGui>
 
 class MindSondeApp : public QObject {
 	
 	Q_OBJECT
+	
+	
+private: // Views
+	
+	SignalView* signalView;
+	ImpedanceView* impedanceView;
+	
+	QAction* axnSignalView;
+	
+	View* getSignalView();
+	View* getImpedanceView();
+	
+	View* activeView;
+	
+	View* setActiveView(View* argView, bool ignorePrev=false);
+	void destroyAllViews();
 
 private:
 	
@@ -30,7 +47,6 @@ private:
 	
 	MainWindow* mainWindow;
 	
-	//Singleton pointer
 	static MindSondeApp* instance;
 	
 	QToolBar* acqToolbar;
@@ -41,15 +57,15 @@ private:
 	
 	FileOutputDaemon* fileDaemon;
 	
-	SignalView* signalView;
-	
 	void createToolbar();
+	void startFileDaemon();
+	void destroyActiveFileDaemon();
 	
 	
 public slots:
 	
 	void stopAcquisition();
-	void showSignalView();
+	void activeViewChanged(QAction* axnView);
 		
 public:
 	

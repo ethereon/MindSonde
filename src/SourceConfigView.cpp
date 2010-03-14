@@ -22,7 +22,11 @@
 
 using namespace std;
 
+//-----------------------------------------------------------------------------
+
 #define COMMON_WIDTH 600
+
+//-----------------------------------------------------------------------------
 
 SourceConfigView::SourceConfigView(SignalSource* src, QWidget* parent) : View(parent)
 {
@@ -36,6 +40,7 @@ SourceConfigView::SourceConfigView(SignalSource* src, QWidget* parent) : View(pa
 
 }
 
+//-----------------------------------------------------------------------------
 
 void SourceConfigView::constructUI() {
 	
@@ -77,6 +82,8 @@ void SourceConfigView::constructUI() {
 
 }
 
+//-----------------------------------------------------------------------------
+
 void SourceConfigView::setupFileOutputGroup() {
 	
 	fileOutputGroup = new QGroupBox(this);
@@ -102,6 +109,7 @@ void SourceConfigView::setupFileOutputGroup() {
 	
 }
 
+//-----------------------------------------------------------------------------
 
 void SourceConfigView::onStart() {
 	
@@ -138,6 +146,8 @@ void SourceConfigView::onStart() {
 	
 }
 
+//-----------------------------------------------------------------------------
+
 void SourceConfigView::onCancel() {
 	
 	source->disconnect();
@@ -146,6 +156,7 @@ void SourceConfigView::onCancel() {
 	
 }
 
+//-----------------------------------------------------------------------------
 
 void SourceConfigView::generateParamInterface() {
 
@@ -158,12 +169,18 @@ void SourceConfigView::generateParamInterface() {
 
 }
 
+//-----------------------------------------------------------------------------
+
 void SourceConfigView::setup() {
 	
 	
 
 }
 
+//-----------------------------------------------------------------------------
+
 void SourceConfigView::cleanup() {
 
 }
+
+//-----------------------------------------------------------------------------

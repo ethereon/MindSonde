@@ -23,6 +23,8 @@
 
 using namespace std;
 
+//-----------------------------------------------------------------------------
+
 SourceSelectionView::SourceSelectionView(QWidget *parent) : View(parent)
 {
 	configView = NULL;
@@ -32,6 +34,8 @@ SourceSelectionView::SourceSelectionView(QWidget *parent) : View(parent)
 
 }
 
+//-----------------------------------------------------------------------------
+
 void SourceSelectionView::refreshSources() {
 	
 	sourceList->clear();
@@ -40,6 +44,8 @@ void SourceSelectionView::refreshSources() {
 	populateSources();
 	
 }
+
+//-----------------------------------------------------------------------------
 
 void SourceSelectionView::showConfigurationDialog()
 {
@@ -60,11 +66,10 @@ void SourceSelectionView::showConfigurationDialog()
 		
 		
 	}
-
-	
-
 	
 }
+
+//-----------------------------------------------------------------------------
 
 void SourceSelectionView::populateSources() {
 	
@@ -84,6 +89,8 @@ void SourceSelectionView::populateSources() {
 	sourceList->setSelectionMode(QAbstractItemView::SingleSelection);
 	sourceList->setCurrentRow(0);	
 }
+
+//-----------------------------------------------------------------------------
 
 void SourceSelectionView::constructUI() {
 
@@ -127,10 +134,16 @@ void SourceSelectionView::constructUI() {
 
 }
 
+//-----------------------------------------------------------------------------
+
 void SourceSelectionView::setup() {
 
 }
 
+//-----------------------------------------------------------------------------
+
 void SourceSelectionView::cleanup() {
 
 }
+
+//-----------------------------------------------------------------------------

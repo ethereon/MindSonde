@@ -21,6 +21,10 @@
 #include <vector>
 #include <string>
 
+using namespace std;
+
+//-----------------------------------------------------------------------------
+
 #define SAMPLING_RATE "SamplingRate"
 #define BLOCK_SIZE "BlockSize"
 #define AMP_MODE "ampMode"
@@ -34,11 +38,14 @@
 #define TRACE(msg) std::cout << "[USB_AMP_SOURCE] " << msg << endl;
 #define SAMPLING_RATE_COUNT 9
 
+//-----------------------------------------------------------------------------
+
 static const int validSamplingRates[] = {32,64,128,256,512,600,1200,2400,4800 };
 
 static vector<string> bandpassFilters;
 static vector<string> notchFilters;
-using namespace std;
+
+//-----------------------------------------------------------------------------
 
 
 void populateFilters(const FilterSpec* filters, int count, vector<string>* dest) {
@@ -61,6 +68,8 @@ void populateFilters(const FilterSpec* filters, int count, vector<string>* dest)
 	
 }
 
+//-----------------------------------------------------------------------------
+
 const vector<string>* getBandpassFilters() {
 	
 	if(bandpassFilters.size()==0) {
@@ -74,6 +83,8 @@ const vector<string>* getBandpassFilters() {
 	return &bandpassFilters;
 }
 
+//-----------------------------------------------------------------------------
+
 const vector<string>* getNotchFilters() {
 	
 	if(notchFilters.size()==0) {
@@ -85,6 +96,8 @@ const vector<string>* getNotchFilters() {
 	
 	return &notchFilters;
 }
+
+//-----------------------------------------------------------------------------
 
 UsbAmpSource::UsbAmpSource(int argIndex, const char* argName) {
 	
@@ -104,12 +117,16 @@ UsbAmpSource::UsbAmpSource(int argIndex, const char* argName) {
 	
 }
 
+//-----------------------------------------------------------------------------
+
 UsbAmpSource::~UsbAmpSource() {
 	
 	if(buffer!=NULL)
 		delete buffer;
 	
 }
+
+//-----------------------------------------------------------------------------
 
 void UsbAmpSource::setup() {
 	
@@ -153,6 +170,8 @@ void UsbAmpSource::setup() {
 	
 }
 
+//-----------------------------------------------------------------------------
+
 ParameterSet* UsbAmpSource::getParameters() {
 	
 	//TODO: Make this lazy instantiate the parameters
@@ -160,18 +179,24 @@ ParameterSet* UsbAmpSource::getParameters() {
 }
 
 
-//Characteristics
+//-----------------------------------------------------------------------------
+
 const char* UsbAmpSource::getName() const {
 	
 	return name.c_str();
 	
 }
 
+//-----------------------------------------------------------------------------
+
 void UsbAmpSource::getAvailableSources(std::vector<std::string>* devices) {
 	
 	AmpLink::getAvailableAmps(devices);
 	
 }
+
+//-----------------------------------------------------------------------------
+
 unsigned UsbAmpSource::getSamplingRate() const {
 	
 	return validSamplingRates[*samplingRateIdx];
@@ -184,13 +209,16 @@ unsigned UsbAmpSource::getChannelCount() const {
 	
 }
 
+//-----------------------------------------------------------------------------
+
 unsigned UsbAmpSource::getBlockSize() const {
 	
 	return (unsigned)*blockSize;
 	
 }
 
-//Actions
+//-----------------------------------------------------------------------------
+
 void UsbAmpSource::configure() {
 	
 	//Set Mode
@@ -238,6 +266,8 @@ void UsbAmpSource::configure() {
 	
 }
 
+//-----------------------------------------------------------------------------
+
 void UsbAmpSource::connect() {
 	
 	if(!amp.connect(index)) {
@@ -248,11 +278,15 @@ void UsbAmpSource::connect() {
 	
 }
 
+//-----------------------------------------------------------------------------
+
 void UsbAmpSource::disconnect() {
 	
 	amp.disconnect();
 	
 }
+
+//-----------------------------------------------------------------------------
 
 void UsbAmpSource::start() {
 	
@@ -260,11 +294,15 @@ void UsbAmpSource::start() {
 	
 }
 
+//-----------------------------------------------------------------------------
+
 void UsbAmpSource::stop() {
 	
 	amp.stop();
 	
 }
+
+//-----------------------------------------------------------------------------
 
 ChannelData* UsbAmpSource::getData() {
 	
@@ -274,3 +312,5 @@ ChannelData* UsbAmpSource::getData() {
 	return &channelData;
 	
 }
+
+//-----------------------------------------------------------------------------

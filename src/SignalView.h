@@ -31,15 +31,14 @@ class SignalView : public View {
 	
 private slots:
 
-	void processNewData(ChannelData* channelData);
+	void handleNewData(ChannelData* channelData);
 	void showChannelSelector();
 	void updateView();
-	void autoscalePlots();
-	void scalePlots();
 	void scaleChanged(int index);
+	void scalingModeChanged(QAction* axnType);
 
 private:
-		
+			
 	QToolBar* tbSignalView;
 	QWidget* container;
 	
@@ -66,15 +65,18 @@ private:
 	void setupPlots();
 	void allocBuffers();
 	void freeBuffers();
+	void autoscalePlots();
+	void scalePlots();
+
 	
 	std::vector<const bool*> isChannelVisible;
+
 	
 public:
 	
 	SignalView(const SignalSource* src, QWidget* parent=0);
 	~SignalView();
-	
-	
+		
 	void setup();
 	void cleanup();
 	

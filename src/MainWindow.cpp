@@ -103,3 +103,5 @@ View* MainWindow::replaceTopView(View* view) {
 	return topView;
 
 }
+
+//-----------------------------------------------------------------------------

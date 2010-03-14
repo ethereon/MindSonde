@@ -16,6 +16,8 @@
 #include <assert.h>
 
 using namespace std;
+
+//-----------------------------------------------------------------------------
 	
 FileOutputDaemon::FileOutputDaemon(DataSerializer* argSerializer) {
 	
@@ -26,24 +28,33 @@ FileOutputDaemon::FileOutputDaemon(DataSerializer* argSerializer) {
 
 }
 
+//-----------------------------------------------------------------------------
+
 FileOutputDaemon::~FileOutputDaemon() {
 	
 	delete serializer;
 	
 }
 
+//-----------------------------------------------------------------------------
+
 void FileOutputDaemon::processNewData(ChannelData* channelData) {
 	
 	serializer->writeData(channelData);
+	AcquisitionCentral::Instance()->releaseData();
 
 }
+
+//-----------------------------------------------------------------------------
 
 void FileOutputDaemon::setFilename(const char* argFilename) {
 	
 	filename = argFilename;
 	
 }
-	
+
+//-----------------------------------------------------------------------------
+
 void FileOutputDaemon::start() {
 	
 	assert(filename.length()!=0);
@@ -64,8 +75,12 @@ void FileOutputDaemon::start() {
 	
 }
 
+//-----------------------------------------------------------------------------
+
 void FileOutputDaemon::stop() {
 	
 	this->disconnect();
 	serializer->close();
 }
+
+//-----------------------------------------------------------------------------

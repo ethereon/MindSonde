@@ -14,9 +14,15 @@
 #include "ImpedanceView.h"
 #include "AcquisitionCentral.h"
 #include <assert.h>
+#include <limits>
+
+//-----------------------------------------------------------------------------
 
 ImpedanceView::ImpedanceView(const SignalSource* src, QWidget* parent) : View(parent)
 {
+	
+	
+	char buffer[20];
 	
 	this->source = src;
 	
@@ -24,23 +30,30 @@ ImpedanceView::ImpedanceView(const SignalSource* src, QWidget* parent) : View(pa
 	
 	assert(channelCount!=0);
 	
-	zLabels = new QLabel[channelCount];
+	indicators = new ThresholdWidget[channelCount];
 	
 	QVBoxLayout* vbox = new QVBoxLayout(this);
 	
-	for(int i=0;i<channelCount;++i)
-		vbox->addWidget(&zLabels[i]);
+	for(int i=0;i<channelCount;++i) {
+
+		sprintf(buffer, "Channel %02d", i+1);
+		indicators[i].setTitle(buffer);
+		vbox->addWidget(&indicators[i]);
+	}
 
 	this->setLayout(vbox);
 
 }
 
+//-----------------------------------------------------------------------------
+
 ImpedanceView::~ImpedanceView() {
 	
-	delete [] zLabels;
+	delete [] indicators;
 	
 }
 
+//-----------------------------------------------------------------------------
 
 void ImpedanceView::setup() {
 	
@@ -48,15 +61,46 @@ void ImpedanceView::setup() {
 
 }
 
-void ImpedanceView::processNewData(ChannelData* channelData) {
+//-----------------------------------------------------------------------------
 
+float ImpedanceView::getAmplitude(float* values, int count) {
+	
+	float min = std::numeric_limits<float>::infinity();
+	float max = -min;
+	
+	for(int i=0; i<count; ++i) {
 		
-	float *values =(float*)channelData->getDataForChannel(0);
+		if(values[i]>max) max = values[i];
+		if(values[i]<min) min = values[i];
+		
+	}
+	
+	return max - min;
+	
+}
+
+//-----------------------------------------------------------------------------
+
+void ImpedanceView::handleNewData(ChannelData* channelData) {		
+
+	
+	for(int i=0;i<channelCount;++i) {
+		
+		float *values =(float*)channelData->getDataForChannel(i+1);
+
+		float amplitude = getAmplitude(values, channelData->getSamplesPerChannel());
+		indicators[i].setValue(amplitude);
+		
+	}
 	
 	AcquisitionCentral::Instance()->releaseData();
 	
 }
 
+//-----------------------------------------------------------------------------
+
 void ImpedanceView::cleanup() {
 
 }
+
+//-----------------------------------------------------------------------------

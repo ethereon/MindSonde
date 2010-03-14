@@ -19,13 +19,16 @@
 class View : public QWidget{
 	
 		Q_OBJECT
-	
+		
 public:
 	
 	View(QWidget* parent) : QWidget(parent) {}
 	virtual ~View() {}
-	
+		
+	//Called when the view is made active
 	virtual void setup()=0;
+	
+	//Called when the view is removed
 	virtual void cleanup()=0;
 	
 };

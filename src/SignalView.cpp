@@ -24,6 +24,8 @@
 
 using namespace std;
 
+//-----------------------------------------------------------------------------
+
 SignalView::SignalView(const SignalSource* src, QWidget* parent) : View(parent) {
 	
 	plots = NULL;
@@ -76,13 +78,11 @@ SignalView::SignalView(const SignalSource* src, QWidget* parent) : View(parent) 
 	//Construct the plots
 	setupPlots();
 	
-	//Subscribe to receive acquisition data
-	connect(AcquisitionCentral::Instance(),
-			SIGNAL(newDataAvailable(ChannelData*)),
-			this,
-			SLOT(processNewData(ChannelData*)));
+
 	
 }
+
+//-----------------------------------------------------------------------------
 
 SignalView::~SignalView() {
 
@@ -93,12 +93,11 @@ SignalView::~SignalView() {
 		
 	}
 	
-	AcquisitionCentral::Instance()->unsubscribe();
-	this->disconnect();
-	
 	freeBuffers();	
 	
 }
+
+//-----------------------------------------------------------------------------
 
 void SignalView::updateView() {
 	
@@ -113,6 +112,8 @@ void SignalView::updateView() {
 		
 }
 
+//-----------------------------------------------------------------------------
+
 void SignalView::showChannelSelector() {
 	
 	channelDialog->show();
@@ -121,6 +122,8 @@ void SignalView::showChannelSelector() {
 	
 	
 }
+
+//-----------------------------------------------------------------------------
 
 void SignalView::allocBuffers() {
 
@@ -155,6 +158,8 @@ void SignalView::allocBuffers() {
 	
 }
 
+//-----------------------------------------------------------------------------
+
 void SignalView::freeBuffers() {
 	
 	if(xValues!=NULL)
@@ -173,6 +178,8 @@ void SignalView::freeBuffers() {
 	}
 	
 }
+
+//-----------------------------------------------------------------------------
 
 void SignalView::setupPlots() {
 	
@@ -213,8 +220,10 @@ void SignalView::setupPlots() {
 	
 }
 
-void SignalView::processNewData(ChannelData* channelData) {
-	
+//-----------------------------------------------------------------------------
+
+void SignalView::handleNewData(ChannelData* channelData) {
+		
 	int endCursor = (dataCursor+blockSize)%windowLength;
 	
 	for(int i=0; i<channelCount; ++i) {
@@ -245,24 +254,25 @@ void SignalView::processNewData(ChannelData* channelData) {
 	
 }
 
+//-----------------------------------------------------------------------------
+
 void SignalView::autoscalePlots() {
-	
-	if(!axnAutoscale->isChecked()) return;
-	
+		
 	for(int i=0;i<channelCount;++i)
 		plots[i].setAxisAutoScale(QwtPlot::yLeft);
 	
 }
 
+//-----------------------------------------------------------------------------
+
 void SignalView::scalePlots() {
-	
-	if(axnAutoscale->isChecked()) return;
 	
 	for(int i=0; i<channelCount; ++i)
 		plots[i].setAxisScale(QwtPlot::yLeft, -scale, scale, 0);
-
 	
 }
+
+//-----------------------------------------------------------------------------
 
 void SignalView::scaleChanged(int index) {
 	
@@ -271,7 +281,24 @@ void SignalView::scaleChanged(int index) {
 	
 }
 
+//-----------------------------------------------------------------------------
+
+void SignalView::scalingModeChanged(QAction* axnType) {
+	
+	if(axnType==axnAutoscale)
+		autoscalePlots();
+	else
+		scalePlots();
+
+	
+}
+
+//-----------------------------------------------------------------------------
+
 void SignalView::setup() {
+	
+	
+	//Setup Toolbar
 	
 	tbSignalView = new QToolBar(this);
 
@@ -295,21 +322,21 @@ void SignalView::setup() {
 	for(int i=0;i<10;++i)
 		comboScale->addItem(QString("x E")+QString::number(i));
 	
-	tbSignalView->addWidget(comboScale);
-	
-
-	
+	tbSignalView->addWidget(comboScale);	
 	
 	MainWindow::Instance()->addToolBar(tbSignalView);
 	connect(axnSelectChannel, SIGNAL(triggered()), this, SLOT(showChannelSelector()));
-	connect(axnAutoscale, SIGNAL(changed()), this, SLOT(autoscalePlots()));
-	connect(axnScale, SIGNAL(changed()), this, SLOT(scalePlots()));
+	connect(axnScaleGroup, SIGNAL(triggered(QAction*)), this, SLOT(scalingModeChanged(QAction*)));
 	connect(comboScale, SIGNAL(currentIndexChanged(int)), this, SLOT(scaleChanged(int)));
 	
 }
+
+//-----------------------------------------------------------------------------
 
 void SignalView::cleanup() {
 	
 	MainWindow::Instance()->removeToolBar(tbSignalView);
 
 }
+
+//-----------------------------------------------------------------------------

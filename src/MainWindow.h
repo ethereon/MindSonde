@@ -11,8 +11,8 @@
  ================================================================
  */
 
-#ifndef _MAINWINDOW_H
-#define	_MAINWINDOW_H
+#ifndef __MAINWINDOW_H__
+#define	__MAINWINDOW_H__
 
 
 #include <QtGui>
@@ -27,10 +27,8 @@ class MainWindow : public QMainWindow {
 
 private:
 
-	//Singleton pointer
 	static MainWindow* instance;
 	
-    //Actions
     QAction* axnToggleAmpState;
 	
     void createToolbars();
@@ -53,5 +51,5 @@ public:
 
 };
 
-#endif	/* _MAINWINDOW_H */
+#endif
 

@@ -16,6 +16,7 @@
 
 #include "View.h"
 #include "SignalSource.h"
+#include "ThresholdWidget.h"
 
 class ImpedanceView : public View {
 	
@@ -23,15 +24,17 @@ class ImpedanceView : public View {
 	
 private slots:
 
-	void processNewData(ChannelData* data);
+	void handleNewData(ChannelData* data);
 
 private:
 	
 	const SignalSource* source;
 	
-	QLabel* zLabels;
+	ThresholdWidget* indicators;
 	
 	int channelCount;
+	
+	float getAmplitude(float* values, int count);
 	
 public:
 	

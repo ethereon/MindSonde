@@ -44,8 +44,8 @@ ThresholdWidget::ThresholdWidget(QWidget* parent) : QWidget(parent)
 	belowThreshold = txtTitle.palette();
 	aboveThreshold = txtTitle.palette();
 	
-	belowThreshold.setColor(txtTitle.backgroundRole(), Qt::red);
-	belowThreshold.setColor(txtTitle.foregroundRole(), Qt::white);
+	aboveThreshold.setColor(txtTitle.backgroundRole(), Qt::red);
+	aboveThreshold.setColor(txtTitle.foregroundRole(), Qt::white);
 	
 	threshold = 2.0;
 }

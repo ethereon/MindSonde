@@ -75,7 +75,7 @@ float ImpedanceView::getAmplitude(float* values, int count) {
 		
 	}
 	
-	return max - min;
+	return (max - min)/2.0;
 	
 }
 
@@ -83,13 +83,15 @@ float ImpedanceView::getAmplitude(float* values, int count) {
 
 void ImpedanceView::handleNewData(ChannelData* channelData) {		
 
+	float Ucal = 1E4;
 	
 	for(int i=0;i<channelCount;++i) {
 		
 		float *values =(float*)channelData->getDataForChannel(i+1);
 
 		float amplitude = getAmplitude(values, channelData->getSamplesPerChannel());
-		indicators[i].setValue(amplitude);
+		float Z = (amplitude*(1E6)/(Ucal - amplitude)) - 1E4;
+		indicators[i].setValue(Z);
 		
 	}
 	

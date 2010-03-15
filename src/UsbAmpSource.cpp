@@ -34,6 +34,7 @@ using namespace std;
 #define NOTCH "Notch"
 
 #define ACQUIRE_INDEX 0
+#define CALIBRATE_INDEX 1
 
 #define TRACE(msg) std::cout << "[USB_AMP_SOURCE] " << msg << endl;
 #define SAMPLING_RATE_COUNT 9
@@ -133,26 +134,16 @@ void UsbAmpSource::setup() {
 	
 	
 	
-	samplingRateIdx = params.addEnum(SAMPLING_RATE,
-									 "Sampling Rate",
-									 validSamplingRates,
-									 SAMPLING_RATE_COUNT);
+	samplingRateIdx = params.addEnum(SAMPLING_RATE, "Sampling Rate", validSamplingRates, SAMPLING_RATE_COUNT);
 	
-	blockSize = params.addInteger(BLOCK_SIZE,
-								  "Block Size",
-								  8);	
+	blockSize = params.addInteger(BLOCK_SIZE, "Block Size", 8);	
 	
 	
-	const char* ampModes[] = { "Acquire", "Calibration ( test signal )" };
+	const char* ampModes[] = { "Acquire", "Calibration ( test signal )", "Impedance" };
 	
-	modeIndex = params.addEnum(AMP_MODE,
-							   "Mode",
-							   ampModes,
-							   2);
+	modeIndex = params.addEnum(AMP_MODE,"Mode", ampModes, 3);
 	
-	bandpassIndex = params.addEnum(BANDPASS,
-								   "Bandpass Filter",
-								   getBandpassFilters());
+	bandpassIndex = params.addEnum(BANDPASS, "Bandpass Filter", getBandpassFilters());
 	
 	notchIndex = params.addEnum(NOTCH, "Notch Filter", getNotchFilters());
 	
@@ -224,8 +215,11 @@ void UsbAmpSource::configure() {
 	//Set Mode
 	if(*modeIndex==ACQUIRE_INDEX)
 		amp.setMode(Acquire);
-	else
+	else if(*modeIndex==CALIBRATE_INDEX)
 		amp.setMode(Calibrate);
+	else
+		amp.setMode(Impedance);
+	
 	
 	char activeChannels[16];
 	

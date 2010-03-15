@@ -37,7 +37,7 @@ SignalView::SignalView(const SignalSource* src, QWidget* parent) : View(parent) 
 	scale = 1;
 	
 	//Default window period of 4 seconds
-	windowPeriod = 4;
+	windowPeriod = 2;
 	
 	//Setup plot container
 	container = new QWidget(this);
